@@ -33,10 +33,20 @@ Pythonを用い画像データである日本のナンバープレート下部�
 ### 2. 数字抽出
 前節でナンバープレートの記載部分をブロック分割することができたため、ここからブロック分割された領域の外接矩形に関して考える。そのためにcv2.boundingRect()を使用し外接矩形の左端の頂点座標と縦横の長さを抽出する。そうすることで外接矩形の領域情報を得ることができる。その得た領域情報を基に、面積や縦横の比率からナンバープレートの４桁以下の数字の場所を絞り込む。数字を抽出後、この後の学習モデル構築のため正方形に整形を行った。
 
+![1st](https://github.com/SHGBB/LicensePlate/blob/main/data/_explain/1.png)
+
+![2nd](https://github.com/SHGBB/LicensePlate/blob/main/data/_explain/2.png)
+
+![3rd](https://github.com/SHGBB/LicensePlate/blob/main/data/_explain/3.png)
+
+![4th](https://github.com/SHGBB/LicensePlate/blob/main/data/_explain/4.png)
+
+
 ### 3. 学習モデル
 学習モデルは3×3カーネル行列で畳み込み、MaxPoolongを行い、ReLU関数で活性化。その後、アフィン→ReLU→アフィン→Softmaxを繰り返しニューラル層を構築している。今回の学習データ量を考慮し、ニューラル層を多くすると過学習を起こすことを懸念し、インプット層を含めた３層構造を取った。また、先述した通り、最適化には学習率０．０５の確率降下法を用い、目的関数はカテゴリカルクロスエントロピ、評価指標はAccuracyを考えた。ここで、学習を行う上で、学習データの数が少なく心許ない状態だっため、数字がはっきりしないデータを使用、データを微回転、ボカシを行い、データの水増しを行い、学習モデルの精度向上を図っている。
 
 ### 4. 素数判定と結果
+２で得られた画像をを学習モデルで予測すると実数値「4,7,2,9」を得ることがきでた。その数字から素数判定を行うと下記の結果を得ることができる。
 
 ![result](https://github.com/SHGBB/LicensePlate/blob/master/data/_explain/result.png)
 
